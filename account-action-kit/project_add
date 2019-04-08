@@ -1,0 +1,98 @@
+#!/bin/sh
+set -e
+
+# Copyright (C) 2016-2019 Bibliotheca Alexandrina
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+subdir="$(readlink -f "$0").sub"
+
+fields="project:,dept:,lfs-prefix:,lfs-bquotag:,lfs-iquotag:,cores:,core-hours:,gpu-hours:"
+
+hierarchical=  # Not implemented at present
+
+lfs_prefix=/lfs01/workdirs
+
+lfs_bquotag=1  # 1G
+lfs_iquotag=100000
+
+usage () {
+  >&2 echo "Usage: $0 --project= --dept= [--lfs-prefix=] [--lfs-bquotag=] [--lfs-iquotag=] [--cores=] --core-hours= --gpu-hours="
+}
+
+if ! opts=`getopt -q -o "" -l "help,$fields" -- "$@"`; then
+  usage
+  exit 1
+fi
+
+eval set -- "$opts"
+
+while true; do
+  case "$1" in
+    --project)
+      project="$2"
+      shift
+      ;;
+    --dept)
+      dept="$2"
+      shift
+      ;;
+    --lfs-prefix)
+      lfs_prefix="$2"
+      shift
+      ;;
+    --lfs-bquotag)
+      lfs_bquotag="$2"
+      shift
+      ;;
+    --lfs-iquotag)
+      lfs_iquotag="$2"
+      shift
+      ;;
+    --cores)
+      cores="$2"
+      shift
+      ;;
+    --core-hours)
+      core_hours="$2"
+      shift
+      ;;
+    --gpu-hours)
+      gpu_hours="$2"
+      shift
+      ;;
+    --help)
+      usage
+      exit 0
+      ;;
+    --)
+      shift
+      break
+      ;;
+  esac
+  shift
+done
+
+if [ $# -ne 0 ] || \
+  [ -z "$project" ] || \
+  [ -z "$dept" ] || \
+  [ -z "$core_hours" ] || \
+  [ -z "$gpu_hours" ]; then
+  usage
+  exit 1
+fi
+
+. "$subdir/unix.sh"
+. "$subdir/lfs.sh"
+. "$subdir/slurm.sh"
