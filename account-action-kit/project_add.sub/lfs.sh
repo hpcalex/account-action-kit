@@ -19,4 +19,4 @@ set -e
 # Quota is soft limit, limit is hard limit
 lfs_blimitg="$lfs_bquotag"
 lfs_ilimitg="$lfs_iquotag"
-lfs setquota -g "$project" -b "$lfs_bquotag"G -B "$lfs_blimitg"G -i "$lfs_iquotag" -I "$lfs_ilimitg" "$lfs_prefix"
+lfs setquota -g "$project" -b "$lfs_bquotag"G -B "$lfs_blimitg"G -i "$lfs_iquotag" -I "$lfs_ilimitg" "$(df --output=target "$lfs_prefix" | tail -n 1)"
