@@ -75,3 +75,5 @@ fi
 . "$subdir/unix.sh"
 . "$subdir/lfs.sh"
 . "$subdir/slurm.sh"
+
+rocks sync users

@@ -34,27 +34,10 @@ if [ -z "$(sacctmgr -np show account "$project")" ]; then
   exit 1
 fi
 
-cpu_hours="$core_hours"  # To be renamed in fields in the future
-
 # In Slurm commands, --cluster is also -M, --partition is also -p
 M=c2
 
-for p in cpu gpu; do
-  defined=
-
-  if [ "$p" = cpu ] && [ "$cpu_hours" -ne 0 ]; then
-    defined=1
-    acct_desig=
-  fi
-
-  if [ "$p" = gpu ] && [ "$gpu_hours" -ne 0 ]; then
-    defined=1
-    acct_desig=g.
-  fi
-
-  if [ ! "$defined" ]; then
-    continue
-  fi
-
-  sacctmgr -i add user "$user" account="$acct_desig$project" cluster="$M" wckey=default
+sacctmgr -np list accounts | \
+  cut -d\| -f2 | egrep "(^|\\.)$project\$" | while read acct; do
+  sacctmgr -i add user "$user" account="$acct" cluster="$M" wckey=default
 done

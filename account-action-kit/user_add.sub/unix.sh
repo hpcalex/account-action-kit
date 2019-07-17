@@ -17,4 +17,3 @@ set -e
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 useradd -g "$project" "$user"
-rocks sync users
