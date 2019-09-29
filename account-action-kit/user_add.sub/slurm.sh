@@ -28,12 +28,6 @@ if ! getent passwd "$user"; then
   exit 1
 fi
 
-# Check scheduler for project
-if [ -z "$(sacctmgr -np show account "$project")" ]; then
-  >&2 echo "ERROR: Project $project is not defined"
-  exit 1
-fi
-
 # In Slurm commands, --cluster is also -M, --partition is also -p
 M=c2
 
