@@ -17,3 +17,7 @@ set -e
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 useradd -g "$project" "$user"
+
+if [ -e /export/home/aquota.user ]; then
+  setquota -u "$user" 200M 210M 10000 10500 /export/home
+fi
