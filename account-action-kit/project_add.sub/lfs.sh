@@ -16,7 +16,22 @@ set -e
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Quota is soft limit, limit is hard limit
-lfs_blimitg="$lfs_bquotag"
-lfs_ilimitg="$lfs_iquotag"
-lfs setquota -g "$project" -b "$lfs_bquotag"G -B "$lfs_blimitg"G -i "$lfs_iquotag" -I "$lfs_ilimitg" "$(df --output=target "$lfs_prefix" | tail -n 1)"
+# Use defaults unless one of block or inode quota options given
+if [ -z "$lfs_bquotag" ] && [ -z "$lfs_blimitg" ] && [ -z "$lfs_iquotag" ] && [ -z "$lfs_ilimitg" ]; then
+  lfs_bquotag=10.0G
+  lfs_blimitg=10.5G
+
+  lfs_iquotag=100000
+  lfs_ilimitg=105000
+fi
+
+# Use hard = soft limit unless given
+if [ -z "$lfs_blimitg" ]; then
+  lfs_blimitg="$lfs_bquotag"
+fi
+
+if [ -z "$lfs_ilimitg" ]; then
+  lfs_ilimitg="$lfs_iquotag"
+fi
+
+lfs setquota -g "$project" -b "$lfs_bquotag" -B "$lfs_blimitg" -i "$lfs_iquotag" -I "$lfs_ilimitg" "$(df --output=target "$lfs_prefix" | tail -n 1)"
