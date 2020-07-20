@@ -16,11 +16,13 @@ set -e
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Use defaults unless one of block or inode quota options given
-if [ -z "$lfs_bquotag" ] && [ -z "$lfs_blimitg" ] && [ -z "$lfs_iquotag" ] && [ -z "$lfs_ilimitg" ]; then
+# Use defaults unless one of quota options given for blocks or inodes
+if [ -z "$lfs_bquotag" ] && [ -z "$lfs_blimitg" ]; then
   lfs_bquotag=10.0G
-  lfs_blimitg=10.5G
+  lfs_blimitg=10.1G
+fi
 
+if [ -z "$lfs_iquotag" ] && [ -z "$lfs_ilimitg" ]; then
   lfs_iquotag=100000
   lfs_ilimitg=105000
 fi
