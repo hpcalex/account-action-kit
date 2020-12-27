@@ -58,4 +58,9 @@ for p in cpu gpu; do
   sed -i "/^\<PartitionName=$p\>/s/\<AllowAccounts=[^ ]\+\>/&,$acct_desig$project/" /etc/slurm/parts
 done
 
+# Set PATH if needed (for when invoking via sudo)
+for bindir in /opt/pdsh/bin /opt/rocks/{bin,sbin}; do
+  echo ":$PATH:" | grep -Fq ":$bindir:" || PATH="$bindir:$PATH"
+done
+
 rocks sync slurm

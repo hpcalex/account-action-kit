@@ -76,4 +76,9 @@ fi
 . "$subdir/lfs.sh"
 . "$subdir/slurm.sh"
 
+# Set PATH if needed (for when invoking via sudo)
+for bindir in /opt/pdsh/bin /opt/rocks/{bin,sbin}; do
+  echo ":$PATH:" | grep -Fq ":$bindir:" || PATH="$bindir:$PATH"
+done
+
 rocks sync users
