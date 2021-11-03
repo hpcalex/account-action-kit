@@ -1,0 +1,70 @@
+#!/bin/sh
+set -e
+
+# Copyright (C) 2016-2019 Bibliotheca Alexandrina
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+fields="user:"
+
+usage () {
+  >&2 echo "Usage: $0 --user="
+}
+
+if ! opts=`getopt -q -o "" -l "help,$fields" -- "$@"`; then
+  usage
+  exit 1
+fi
+
+eval set -- "$opts"
+
+while true; do
+  case "$1" in
+    --user)
+      user="$2"
+      shift
+    ;;
+    --help)
+      usage
+      exit 0
+    ;;
+    --)
+      shift
+      break
+    ;;
+  esac
+  shift
+done
+
+if [ $# -ne 0 ] || [ -z "$user" ]; then
+  usage
+  exit 1
+fi
+
+# Check existence of user
+if ! getent passwd "$user"; then
+  >&2 echo "ERROR: User $user does not exist in the system"
+  exit 1
+fi
+
+keys_file=$(eval echo "~$user/.ssh/authorized_keys")
+
+if [ ! -e "$keys_file" ] || [ -e "$keys_file.expire" ]; then
+  >&2 echo "ERROR: authorized_keys does not exist, or authorized_keys.expire already exists"
+  exit 1
+fi
+
+sudo -u "$user" sh <<EOF
+mv "$keys_file" "$keys_file.expire"
+EOF
