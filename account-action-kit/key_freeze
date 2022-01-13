@@ -60,11 +60,11 @@ fi
 
 keys_file=$(eval echo "~$user/.ssh/authorized_keys")
 
-if [ ! -e "$keys_file" ] || [ -e "$keys_file.expire" ]; then
-  >&2 echo "ERROR: authorized_keys does not exist, or authorized_keys.expire already exists"
+if [ ! -e "$keys_file" ] || [ -e "$keys_file.freeze" ]; then
+  >&2 echo "ERROR: authorized_keys does not exist, or >authorized_keys.freeze already exists"
   exit 1
 fi
 
 sudo -u "$user" sh <<EOF
-mv "$keys_file" "$keys_file.expire"
+mv "$keys_file" "$keys_file.freeze"
 EOF
