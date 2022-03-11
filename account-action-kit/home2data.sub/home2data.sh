@@ -27,9 +27,10 @@ fi
 
 cd "$HOME"
 
-for i in cache/pip cache/torch conda/pkgs conda/envs local/bin local/lib; do
-  # Assume a single slash
-  dst="data/${i/\//_}"
+# Hidden (.*) entries to relocate from $HOME to data/
+for i in anaconda cache/jedi cache/pip cache/torch conda/pkgs conda/envs local/bin local/lib; do
+  # If pattern begins with /, all matches are replaced
+  dst="data/${i//\//_}"
 
   if [ ! -e "./$dst" ]; then
     if [ -e ".$i" ]; then
@@ -40,6 +41,6 @@ for i in cache/pip cache/torch conda/pkgs conda/envs local/bin local/lib; do
     fi
 
     mkdir -p "$(dirname ".$i")" "./$dst"
-    ln -s "../$dst" ".$i"
+    ln -s "$(echo "$i" | sed -e 's,[^/],,g' -e 's,/,../,g')$dst" ".$i"
   fi
 done
