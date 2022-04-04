@@ -18,13 +18,13 @@ set -e
 
 subdir="$(readlink -f "$0").sub"
 
-fields="project:,dept:,user:,lfs-prefix:"
+fields="project:,dept:,user:,lfs_prefix:"
 
 hierarchical=  # Not implemented at present
 lfs_prefix=/lfs01/workdirs
 
 usage () {
-  >&2 echo "Usage: $0 --project= --dept= --user= [--lfs-prefix=]"
+  >&2 echo "Usage: $0 --project= --dept= --user= [--lfs_prefix=]"
 }
 
 if ! opts=`getopt -q -o "" -l "help,$fields" -- "$@"`; then
@@ -48,7 +48,7 @@ while true; do
       user="$2"
       shift
       ;;
-    --lfs-prefix)
+    --lfs_prefix)
       lfs_prefix="$2"
       shift
       ;;

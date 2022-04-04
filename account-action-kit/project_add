@@ -18,14 +18,14 @@ set -e
 
 subdir="$(readlink -f "$0").sub"
 
-fields="project:,dept:,lfs-prefix:,lfs-bquotag:,lfs-blimitg:,lfs-iquotag:,lfs-ilimitg:,cores:,core-hours:,gpu-hours:"
+fields="project:,dept:,lfs_prefix:,lfs_bquotag:,lfs_blimitg:,lfs_iquotag:,lfs_ilimitg:,cores:,core_hours:,gpu_hours:"
 
 hierarchical=  # Not implemented at present
 
 lfs_prefix=/lfs01/workdirs
 
 usage () {
-  >&2 echo "Usage: $0 --project= --dept= [--lfs-prefix=] [--lfs-bquotag=] [--lfs-blimitg=] [--lfs-iquotag=] [--lfs-ilimitg=] [--cores=] --core-hours= --gpu-hours="
+  >&2 echo "Usage: $0 --project= --dept= [--lfs_prefix=] [--lfs_bquotag=] [--lfs_blimitg=] [--lfs_iquotag=] [--lfs_ilimitg=] [--cores=] --core_hours= --gpu_hours="
 }
 
 if ! opts=`getopt -q -o "" -l "help,$fields" -- "$@"`; then
@@ -45,23 +45,23 @@ while true; do
       dept="$2"
       shift
       ;;
-    --lfs-prefix)
+    --lfs_prefix)
       lfs_prefix="$2"
       shift
       ;;
-    --lfs-bquotag)
+    --lfs_bquotag)
       lfs_bquotag="$2"
       shift
       ;;
-    --lfs-blimitg)
+    --lfs_blimitg)
       lfs_blimitg="$2"
       shift
       ;;
-    --lfs-iquotag)
+    --lfs_iquotag)
       lfs_iquotag="$2"
       shift
       ;;
-    --lfs-ilimitg)
+    --lfs_ilimitg)
       lfs_ilimitg="$2"
       shift
       ;;
@@ -69,11 +69,11 @@ while true; do
       cores="$2"
       shift
       ;;
-    --core-hours)
+    --core_hours)
       core_hours="$2"
       shift
       ;;
-    --gpu-hours)
+    --gpu_hours)
       gpu_hours="$2"
       shift
       ;;
