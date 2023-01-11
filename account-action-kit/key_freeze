@@ -22,6 +22,21 @@ usage () {
   >&2 echo "Usage: $0 --user="
 }
 
+case "$(basename "$0")" in
+  "key_freeze")
+    s1=""
+    s2=".freeze"
+    ;;
+  "key_unfreeze")
+    s1=".freeze"
+    s2=""
+    ;;
+  *)
+    >&2 echo "ERROR: Not invoked as either key_freeze or key_unfreeze"
+    exit 1
+    ;;
+esac
+
 if ! opts=`getopt -q -o "" -l "help,$fields" -- "$@"`; then
   usage
   exit 1
@@ -60,11 +75,11 @@ fi
 
 keys_file=$(eval echo "~$user/.ssh/authorized_keys")
 
-if [ ! -e "$keys_file" ] || [ -e "$keys_file.freeze" ]; then
-  >&2 echo "ERROR: authorized_keys does not exist, or >authorized_keys.freeze already exists"
+if [ ! -e "$keys_file$s1" ] || [ -e "$keys_file$s2" ]; then
+  >&2 echo "ERROR: authorized_keys$s1 does not exist, or authorized_keys$s2 already exists"
   exit 1
 fi
 
 sudo -u "$user" sh <<EOF
-mv "$keys_file" "$keys_file.freeze"
+mv "$keys_file$s1" "$keys_file$s2"
 EOF
