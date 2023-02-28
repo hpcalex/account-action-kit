@@ -67,6 +67,13 @@ if ! echo "$pubkey" | ssh-keygen -l -f -; then
   >&2 echo "ERROR: Invalid public key"
 fi
 
+keys_file=$(eval echo "~$user/.ssh/authorized_keys")
+
+if [ -e "$keys_file.freeze" ]; then
+  >&2 echo "ERROR: cannot update key while authorized_keys.freeze exists"
+  exit 1
+fi
+
 sudo -u "$user" sh <<EOF
 mkdir -p -m 700 "\$HOME/.ssh"
 touch "\$HOME/.ssh/authorized_keys"
